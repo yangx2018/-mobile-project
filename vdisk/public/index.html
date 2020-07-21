@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />  
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+   
+    <title>微盘</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <script>
+      window.CONFIG={API_BASE_URL:'http://192.10.169.212:31111/cms/api'}; //212环境
+    
+    </script>
+   <!-- <script src="./fastclick.min.js"></script> -->
+   <script>
+    //  if ('addEventListener' in document) {
+    //    document.addEventListener('DOMContentLoaded', function() {
+    //      FastClick.attach(document.body);
+    //    }, false);
+    //  }
+    //  if(!window.Promise) {
+    //    document.writeln('<script src="https://as.alipayobjects.com/g/component/es6-promise/3.2.2/es6-promise.min.js"'+'>'+'<'+'/'+'script>');
+    //  }
+
+     /************ 配置与 app 交互所需代码 ****************/
+      /**
+       * app js 异步执行回调函数
+       * command
+       * uuid 回调的 ID
+       * strresult 返回值
+       */
+      window.jsnativeresult = function (command, uuid, strresult) {
+      //   console.log('jsnativeresult-' + strresult);
+      //   console.log(`jsnativeresult-${JSON.stringify({ command, uuid, strresult })}`);
+        // 获取对应的回调函数
+        const callback = (window.__CALLBACK__ || {})[uuid]; // {[uuid]:{resolve,reject}}
+      //   console.log('jsnativeresult-callback');
+        callback && callback.resolve(strresult);
+        // callback 执行后，如果是 __ 销毁
+        if (uuid.startsWith('__')) delete window.__CALLBACK__[uuid];
+        // console.log("jsnativeresult", uuid, window.__CALLBACK__);
+      };
+      
+     const browser = (function() {
+      var u = navigator.userAgent;
+      return {
+        //移动终端浏览器版本信息
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或uc浏览器
+        iPhone: u.indexOf('iPhone') > -1, //是否为iPhone或者QQHD浏览器
+        iPad: u.indexOf('iPad') > -1, //是否iPad
+      };
+    })();
+    // console.log(browser)
+    
+    if (browser.iPhone) {
+      (function () {
+        if (window.webkit && window.webkit.messageHandlers) {
+          window.yyzd = {
+            commandnative: function(actionurl) {
+              window.webkit.messageHandlers.commandnative.postMessage(actionurl);
+            },
+            getnative: function(actionurl) {
+              window.webkit.messageHandlers.getnative.postMessage(actionurl);
+            },
+            downloadnative: function(actionurl) {
+              window.webkit.messageHandlers.downloadnative.postMessage(actionurl);
+            },
+          };
+        }
+      })();
+    }
+   </script>
+  </body>
+</html>

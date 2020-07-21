@@ -1,0 +1,135 @@
+.App{
+    min-height:100vh;
+    background-color: #fff;
+}
+.pa-15{
+    padding: 15px;
+}
+.plr-15{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.plr-30{
+    padding-left: 30px;
+    padding-right: 30px;
+}
+.am-list-content{
+    img {margin: -5px 10px 0 0;}
+}
+.am-list-body::before{
+    background-color: #fff !important;
+}
+.am-search{
+    background-color: #fff;
+}
+.am-search-input{
+    background-color: #efeff4;
+}
+.am-modal-content{
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+}
+.breadcrumb{
+    position: relative;
+    font-size: 12px;
+    padding: 8px;
+    color: #c2c2c2;
+    background-color:#fff;
+    margin-bottom: 5px;
+    span {
+        color:#000
+    }
+}
+.breadcrumb::after{
+    content: '';
+    position: absolute;
+    background-color: #efeff4;
+    display: block;
+    z-index: 1;
+    top: auto;
+    right: auto;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 8PX;
+    transform-origin: 50% 100%;
+    transform: scaleY(0.5);
+}
+.actionmodal{
+    height: 36vh;
+    background-color: #f1f1f1;
+    position: relative;
+    .closebutton{
+        box-sizing: border-box;
+        background-color: #fefefe;
+        padding: 10px;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        color: #000;
+    }
+    .actiontype{
+        width:48px ;
+        height: 86px;
+        text-align: center;
+        color: #000;
+        font-size: 12px;
+        margin: 15px 15px 15px 0;
+        .actiontype_img{
+            background-color:#fff ;
+            height: 48px;
+            width: 48px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            img{
+                width: 24px;
+                height: 24px;
+                padding: 12px;
+            }
+        }
+    }
+    .buildtype{
+        width:64px ;
+        height: 86px;
+        text-align: center;
+        color: #000;
+        font-size: 12px;
+        margin: 15px 15px 15px 0;
+        .buildtype_img{
+            position: relative;
+            height: 32px;
+            width: 64px;
+            margin-bottom: 5px;
+            img{
+                width: 32px;
+                height: 32px;
+                padding: 0px 16px;
+            }
+        }
+        .fileinput{
+            opacity: 0;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            right: 0;
+        }
+    }
+}
+//结果页样式
+.am-result-pic .spe {
+    width: 60px;
+    height: 60px;
+  }
+.am-result .am-result-title{
+    font-size: 16px;
+    color: #c5c3c3;
+}
+//列表 extra宽度
+.am-list-item .am-list-line .am-list-extra{
+    flex-basis: 20%;
+}
+//首页样式
+.index_style{
+    
+}
