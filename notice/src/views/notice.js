@@ -25,7 +25,7 @@ const NoticePage = (props) => {
     const ref=useRef();
     const clientHeight=document.documentElement.clientHeight;
     const [listData,setListData]=useState([]); //公告列表
-    const [page,setPage]=useState({pageNum:1,pageSize:10});
+    const [page,setPage]=useState({pageNum:1,pageSize:5});
     const [columnList,setcolumnList]=useState([]);  //栏目列表
     const [currentColumnid,setcurrentColumnid]=useState(undefined) //当前栏目id
     // const [Mvisible,setMvisible]=useState(false) //能否看见搜索模态框
@@ -34,16 +34,13 @@ const NoticePage = (props) => {
     const [total,setTotal]=useState(0);
     const [loadingMore,setLoadingMore]=useState(false);
     const [refreshId,setRefreshId]=useState(1);
-
+    
     useEffect(()=>{
         //获取栏目列表
-        getNoticecolumnlist({...page}).then(res=>{
+        getNoticecolumnlist().then(res=>{
             console.log(res)
             if(res.message==="success" &&res.data.list.length>0){
-                // const columndatalist = res.data.list.map(function(item){
-                //     item.title = item.columnName
-                //     return item
-                // })
+                // setcolumnList([{columnName:"所有",id:"all"},...res.data.list]);//存放栏目列表
                 setcolumnList(res.data.list);//存放栏目列表
                 getselectcolumnlist(res.data.list[0].id) //初始化第一个栏目的公告列表
                 setcurrentColumnid(res.data.list[0].id)  //存放当前选择的栏目的id
@@ -58,18 +55,18 @@ const NoticePage = (props) => {
     function getselectcolumnlist(columnId){
         setloading(true)
         setListData([])
-        getNoticelist({...page,noticeColumnId:columnId}).then(res=>{
+        getNoticelist({...page,pageNum:1,noticeColumnId:columnId}).then(res=>{
             console.log(res)
             if(res.message==="success"){
                 setListData(res.data.list)
                 setTotal(res.data.total)
             }
         }).then(res => setloading(false))
-        // setloading(false)
     }
     //点击栏目选择公告列表
     function selectColumndata(tab,index){
-        console.log(tab)
+        console.log(tab,page)
+        setPage({...page,pageNum:1});
         getselectcolumnlist(tab.id)
         setcurrentColumnid(tab.id)//将选择栏目id存放
     }
@@ -120,36 +117,37 @@ const NoticePage = (props) => {
         >
             公告
         </NavBar> */}
-        <NoticeSearch searchfc={getNoticelist} currentid={currentColumnid}  resetlist={setListData}/>
-        <Tabs tabs={columnList} onChange={selectColumndata} swipeable={false}
+        
+        <Tabs tabs={columnList} onTabClick={selectColumndata} swipeable={false}
         initialPage={0} renderTab={tab => <span className="text_ellipsis">{tab.columnName}</span>}>
-        {/* <div style={{overflow:"hidden",height:"100%",width:"100%"}}> */}
-            <div>
-                <Bscroll ref={ref} height={clientHeight - 90} isNoMore={listData.length===total} loadingMore={loadingMore} betterScrollRefreshId={refreshId}
-                refreshFn={refreshFn} loadMoreFn={loadMoreFn}>
-                    <List>
-                        {listData.length>0?listData.map((item, index) => {
-                            return (
-                            <List.Item className="mt-5" key={index} align="top" wrap={false} onClick={() => gotoNoticedetail(item)} >
-                                {item.noticeTitle}
-                                <div className="content_">
-                                    <div className="content_1">
-                                        <div className="content_1_c">{FilterHtml(item.noticeExplain)}</div>
-                                        <span>{Changetime(item.applicantDate,2)} {item.applicantName}</span>
-                                    </div>
-                                    {/* <div className="content_2">
-                                        <img src={item.imgAbbr} alt="" />
-                                    </div> */}
-                                </div>
-                            </List.Item>
-                            );
-                        }):<div className="nodata">{loading?<Icon type="loading"/>:"没有数据"}</div>
-                        }
-                    </List>
-                </Bscroll>
-            </div>
-        {/* </div> */}
         </Tabs>
+
+        <div style={{position:"relative",zIndex:"1"}}>
+            <NoticeSearch searchfc={getNoticelist} currentid={currentColumnid}  resetlist={setListData}/>
+        </div>
+   
+        {/* style={{overflow:"hidden",height:"100%"}} */}
+        <div>
+            <Bscroll ref={ref} height={clientHeight - 90} isNoMore={listData.length===total} loadingMore={loadingMore} betterScrollRefreshId={refreshId}
+            refreshFn={refreshFn} loadMoreFn={loadMoreFn}>
+                <List>
+                    {listData.length>0?listData.map((item, index) => {
+                        return (
+                        <List.Item className="mt-5" key={index} align="top" wrap={false} onClick={() => gotoNoticedetail(item)} >
+                            {item.noticeTitle}
+                            <div className="content_">
+                                <div className="content_1">
+                                    <div className="content_1_c">{FilterHtml(item.noticeExplain)}</div>
+                                    <span>{Changetime(item.applicantDate,2)} {item.applicantName}</span>
+                                </div>
+                            </div>
+                        </List.Item>
+                        );
+                    }):<div className="nodata">{loading?<Icon type="loading"/>:"没有数据"}</div>
+                    }
+                </List>
+            </Bscroll>
+        </div> 
         {/* <NoticeSearch visible={Mvisible} onClose={()=>setMvisible(false)} searchfc={getNoticelist}
             currentid={currentColumnid}  resetlist={setListData}
         /> */}

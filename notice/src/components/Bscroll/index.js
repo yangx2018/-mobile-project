@@ -10,7 +10,7 @@ const STOP = 56;
 const Bscroll = forwardRef((props, ref) => {
   // height 是必选 prop
   const { height, refreshFn, loadMoreFn, isNoMore, loadingMore, betterScrollRefreshId } = props;
-
+  // console.log(height)
   const bsRef = useRef(null);
 
   const [beforePullDown, setBeforePullDown] = useState(true);
@@ -60,7 +60,7 @@ const Bscroll = forwardRef((props, ref) => {
 
   useEffect(() => {
     bsRef.current = new BetterScroll(ref.current, {
-      // bounce:false,//是否启用回弹动画效果
+      bounce:false,//是否启用回弹动画效果
       click:true,
       bounceTime: TIME_BOUNCE,
       pullDownRefresh: refreshFn
@@ -88,7 +88,7 @@ const Bscroll = forwardRef((props, ref) => {
   useEffect(() => {
     bsRef.current.refresh();
   }, [height]);
-
+// console.log(!refreshFn,!beforePullDown,!isPullingDown)
   return (
     <div style={{ height }} ref={ref} className='bscroll-wrapper'>
       <div className='bscroll-content'>
