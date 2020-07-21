@@ -6,7 +6,7 @@ import * as serviceWorker from './serviceWorker';
 import './views/vdisk.less';
 import VConsole from 'vconsole';
 // import Addddss from './views/ceshi'
-var vConsole = new VConsole();
+// var vConsole = new VConsole();
 ReactDOM.render(
   // <React.StrictMode>
   //   <App />
