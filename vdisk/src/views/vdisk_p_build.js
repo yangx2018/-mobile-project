@@ -77,6 +77,7 @@ const BuildModal=(props)=>{
         let file = e.target.files[0]
         const fr = new FileReader(file)
         fr.readAsDataURL(file)
+        Toast.loading('Loading...', 2)
         fr.onload = function () {
             uploadimgrequest({
                 pid:props.thepid[props.thepid.length-1],
@@ -84,12 +85,12 @@ const BuildModal=(props)=>{
                 extId:props.theextId,
                 fileBase64:this.result})
                 .then(res =>{
-                    if(res.message==="success"){
-                        Toast.success("上传成功", 1)
-                        props.resetlist()
-                    }else{
-                        Toast.fail(res.message, 1);
-                    }
+                        if(res.message==="success"){
+                            Toast.success("上传成功", 1)
+                            props.resetlist()
+                        }else{
+                            Toast.fail(res.message, 1);
+                        }
                 })
         }
     }

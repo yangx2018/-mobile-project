@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react';
-import {List , Icon} from "antd-mobile";
+import {List,Checkbox , Button,Icon, Toast} from "antd-mobile";
 import 'antd-mobile/dist/antd-mobile.css';
 import api from  '../utils/api';
 import Changetime from '../utils/time'
@@ -14,43 +14,42 @@ const getNoticedetail=(data)=>{
 }
 const NoticePage_detail = (props) => {
   
-    const [dataDetail,setdataDetail]=useState(undefined);
-    const [loadding,setLoadding]=useState(true);
-    const [searchParams,setSearchParams]=useState({id:props.match.params.ID});
-
+    const [loadding,setloadding]=useState(true);//加载内容loading
+    const [dataDetail,setdataDetail]=useState(undefined); //内容
+    const [loadids,setloadids] = useState([])   //打包下载的数组
+    const [buttonloading,setbuttonloading] = useState(false)  //打包下载等待loading
+   
     useEffect(()=>{
-        console.log(props)
-        getNoticedetail({...searchParams}).then(res=>{
+        console.log("props.match.params.ID",props.match.params.ID)
+        getNoticedetail({id:props.match.params.ID}).then(res=>{
             console.log(res)
             if(res.message==="success"){
                 setdataDetail(res.data)
-                setLoadding(false)
+                setloadding(false)
                 document.getElementById('myContent').innerHTML=res.data.noticeExplain;
                 
             }
         })
     },[]);
 
-    async function loadextrafile(item){
-        const localToken = await getLocal('token');
-        const token = localToken ? JSON.parse(localToken) : {};
-        const loadurl = window.CONFIG.API_BASE_URL + "/notice/batchdownload?access_token="+token.access_token+"&ids="+item.id
-        console.log("url",loadurl);
-        window.yyzd.downloadnative(loadurl);
+    async function loadextrafile(){
+            if(loadids.length>0){
+                setbuttonloading(true)
+                const idsstr = loadids.join()
+                const localToken = await getLocal('token');
+                const token = localToken ? JSON.parse(localToken) : {};
+                const loadurl = window.CONFIG.API_BASE_URL + "/notice/batchdownload?access_token="+token.access_token+"&ids="+idsstr
+                console.log("url",loadurl);
+                setbuttonloading(false)
+                window.yyzd.downloadnative(loadurl);
+            }else{
+                Toast.info("请选择需要下载的附件",1)
+            }
+    
     }
-
+    console.log("loadids",loadids)
     return (
     <div>
-        {/* <NavBar
-            mode="dark"
-            icon={<Icon type="left" />}
-            onLeftClick={() =>{props.history.goBack();} }
-            // rightContent={[
-            // <Icon  key="1" type="ellipsis"/>
-            // ]}
-        >
-            公告
-        </NavBar> */}
         {dataDetail?<div className="notice_detail">
             <h2>{dataDetail.noticeTitle}</h2>
             <p style={{color:"#888"}}>{Changetime(dataDetail.applicantDate,1)}</p>
@@ -58,13 +57,28 @@ const NoticePage_detail = (props) => {
             <div id='myContent' style={{"wordWrap" : "break-word"}}></div>
             <div className="mt-10">
                 {dataDetail.attachmentList.length>0?
-                <List renderHeader={() => '附件'}>
-                    {dataDetail.attachmentList.map((item, index) => {
-                        return (
-                            <List.Item key={index} extra={'点击下载'} onClick={() => loadextrafile(item)}>{item.fileName}</List.Item>
-                        )
-                    })}
-                </List>:<div></div>
+                <div>
+                    <List renderHeader={() => '附件'}>
+                        {dataDetail.attachmentList.map((item, index) => {
+                            return (
+                                <Checkbox.CheckboxItem key={index}  onChange={
+                                    (e) => {
+                                        const loadids_ = loadids
+                                        if(e.target.checked){
+                                            setloadids([...loadids_,item.id])
+                                        }else{
+                                            const newloadids_ = loadids_.filter(loadids_item => {
+                                                if(loadids_item !== item.id){ return loadids_item}
+                                            })
+                                            setloadids(newloadids_)
+                                        }
+                                    }
+                                }>{item.fileName}</Checkbox.CheckboxItem>
+                            )
+                        })}
+                    </List>
+                    <Button type="ghost" size="small" onClick={() => loadextrafile()} loading={buttonloading} style={{width:"30%",marginTop:"10px"}}>打包下载</Button>
+                </div>:<div></div>
                 }
             </div>
         </div>:<div className="nodata">{loadding?<Icon type="loading"/>:"没有数据"}</div>

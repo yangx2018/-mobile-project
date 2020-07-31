@@ -1,10 +1,12 @@
 import React,{useState,useEffect} from 'react';
-import {Icon,List,Result} from "antd-mobile";
+import {Icon,List,Result,Modal} from "antd-mobile";
 import 'antd-mobile/dist/antd-mobile.css';
 import MyFunLogo from '../assets/images/MyFunLogo';
 import ActionModal from './vdisk_p_action'
 import moment from 'moment'
+import getLocal from '../utils/tool'
 
+const alert = Modal.alert
 const myImg = src => <img src={src} className="spe am-icon am-icon-md" alt="" />;
 const SearchFilepack = (props) => {
     
@@ -30,6 +32,17 @@ const SearchFilepack = (props) => {
         
     },[props.data]);
 
+    async function deletethisfile(item){
+        const localToken = await getLocal('token');
+        const token = localToken ? JSON.parse(localToken) : {};
+        const url = window.CONFIG.API_BASE_URL + "/file/download?access_token="+token.access_token+"&ids="+item.id+"&extId="+item.extId
+        console.log("url",url);
+        alert('是否下载','',[
+            {text:"取消",onPress:() => console.log("已取消")},
+            {text:"确定",onPress:() => window.yyzd.downloadnative(url)}
+        ])
+    }
+
     // console.log(actionData,filepack,file)
     return (
         <div>
@@ -45,7 +58,7 @@ const SearchFilepack = (props) => {
                                 extra={<Icon type="ellipsis" onClick={(e)=>{
                                     e.stopPropagation();
                                     setvisible(true);
-                                    setactionData({...actionData,id:item.id,extid:item.extId,name:item.name,type:item.type});
+                                    setactionData({...actionData,id:item.id,extid:item.extId,name:item.name});
                                 }}></Icon>}> 
                                 {item.name}
                                 </List.Item>
@@ -58,8 +71,11 @@ const SearchFilepack = (props) => {
                             {file.map((item, index) => {
                             return (
                             <List.Item thumb={MyFunLogo.getfileimg(item.fileType)}  key={index} align="middle" wrap={false}
-                            extra={<Icon type="ellipsis" onClick={()=>{setvisible(true);
-                                setactionData({...actionData,id:item.id,extid:item.extId,name:item.name,type:item.type})}}></Icon>}>
+                            onClick={() => deletethisfile(item)}
+                            extra={<Icon type="ellipsis" onClick={(e)=>{
+                                e.stopPropagation();
+                                setvisible(true);
+                                setactionData({...actionData,id:item.id,extid:item.extId,name:item.name})}}></Icon>}>
                                 {item.name}<List.Item.Brief>{item.createUser} · {moment(item.createDate).format('YYYY-MM-DD')}</List.Item.Brief>
                             </List.Item>
                             );

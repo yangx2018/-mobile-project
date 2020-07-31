@@ -6,13 +6,13 @@ const api=axios.create({
 });
 api.interceptors.request.use(async function tt(config){
     console.log("api response intereptors config",config)
-//     const localToken = await getLocal('token');
-//     console.log("lalalala",localToken)
-//     const token = localToken ? JSON.parse(localToken) : {};
-//     if(token){
-//         config.headers["Authorization"]="bearer" + token.access_token; 
-//     }
-    config.headers["Authorization"]="bearereyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsicmVzX2FwcHRlbSIsIm9yZGVyLXNlcnZpY2UiXSwidXNlcl9uYW1lIjoiWjYxNzlAY3NzY2hwcyIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdLCJleHAiOjE1OTUzMjI0MDcsImF1dGhvcml0aWVzIjpbXSwianRpIjoiMzUzOTkzZTgtYzRlMC00NmM2LWE0Y2UtYTliYzllMzllZDhjIiwiY2xpZW50X2lkIjoiJDJhJDEwJFhPVnM0WjFZdFBLcUt3UVZ5d0c5ai54TEFxWFlSUUxHWk1HTXJaRE5idGw2cFVDMFdldGVxIn0.BIDpk5U-xKOm0T33ilB38XeIQdsxyxzxo_XyA8Cpt7Z_AAklGEVOA3EW-ewipNqEPyL3QJmWBM9jNyL_WoUBdXwnSjuEh1Y5xv89SCRt4zg5tY-7AWalm7WbNr3kXBuH0L3_RlxLMQD-Ho4Aj-glsruircKgmbGTV1re3QB7cwdLH_deWexFf3-_fELk0J_Pi5DCC-OkL4809Z5S880MPh8RcnHyK1xAcWz2LJbNOtY-mrrP5b9lH4888rKutn-ds6A_IO7DYletKPhl6EhgjAtwpoa2VqhI_qYZqLoXunTZrMPosh2YTp7GBaX1Vez84jfOZatHov8U4iLN66Y3UA"
+    const localToken = await getLocal('token');
+    console.log("lalalala",localToken)
+    const token = localToken ? JSON.parse(localToken) : {};
+    if(token){
+        config.headers["Authorization"]="bearer" + token.access_token; 
+    }
+    //  config.headers["Authorization"]="bearereyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsicmVzX2FwcHRlbSIsIm9yZGVyLXNlcnZpY2UiXSwidXNlcl9uYW1lIjoiWjYxNzlAY3NzY2hwcyIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdLCJleHAiOjE1OTU0OTUyOTAsImF1dGhvcml0aWVzIjpbXSwianRpIjoiN2E0NmZhNDYtNTAwNC00ZmE1LWFhOGMtNmRhYjNhYTA5MTM2IiwiY2xpZW50X2lkIjoiJDJhJDEwJFhPVnM0WjFZdFBLcUt3UVZ5d0c5ai54TEFxWFlSUUxHWk1HTXJaRE5idGw2cFVDMFdldGVxIn0.DTe_o114wKm6lirk90841VoxlBmU8zqJInqawprF_8Ej3Lug_NIOad8a3zScPacSjgvVNLdvOb61VxG5aVrQRSohl0fE5Ve9XDICiIU8lrDR7ld3EDb_-cY8H4mXH7EbTTBXyJAKc3JUkWZ6IE84FINdgEEK6adX2Doe5aG86jsygEsXyMsa-1tMMDwcvyt18PI4RQ0agnvZ8EhyA6NiA07l2M379bzT57jjpepiEE621L4n0uacGZEZML43mas2m5FOGzQE9jyN7z2Jl5C2AJyHbExDPg8NTermm1jC9bOu_99zuxFtGvZEvsYNkLYUiVtxpGN2DGkKEdOGSNvO4w"
     const myconfig={...config,params:{...config.params}};
     // console.log("aaaaa",myconfig)
     return myconfig;
@@ -28,8 +28,6 @@ api.interceptors.response.use(response=>{
      }else{
          //没有登录
          Toast.fail("无法请求到数据")
-        //   return response;
-        //  window.location.replace('#/login');
          return Promise.reject(false);
      }
 },error=>{

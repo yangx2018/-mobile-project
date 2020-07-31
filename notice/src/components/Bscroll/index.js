@@ -5,9 +5,10 @@ import './style.less';
 
 const TIME_BOUNCE = 800;
 const THRESHOLD = 70;
-const STOP = 56;
+const STOP = 0;
 
 const Bscroll = forwardRef((props, ref) => {
+  
   // height 是必选 prop
   const { height, refreshFn, loadMoreFn, isNoMore, loadingMore, betterScrollRefreshId } = props;
   // console.log(height)
@@ -22,11 +23,11 @@ const Bscroll = forwardRef((props, ref) => {
   async function pullingUpHandle() {
     console.log('pullingUp');
     bsRef.current.finishPullUp(); // 这句东西是天意，请不要瞎改了，改了出现什么问题你handle不了的，better-sroll库作者可能都不知道怎么修
+    // console.log(isNoMore ,loadingMore)
     if (isNoMore || loadingMore) return;
     setIsPullUpLoad(true);
 
     await loadMoreFn();
-
     bsRef.current.finishPullUp();
     bsRef.current.refresh();
     setIsPullUpLoad(false);
@@ -43,7 +44,7 @@ const Bscroll = forwardRef((props, ref) => {
     await refreshFn();
     
     setIsPullingDown(false);
-    bsRef.current.finishPullDown();
+    bsRef.current.finishPullDown(); //好像没有这个方法
     
     setTimeout(() => {
       setBeforePullDown(true);
@@ -59,10 +60,12 @@ const Bscroll = forwardRef((props, ref) => {
   }, [betterScrollRefreshId]);
 
   useEffect(() => {
+    console.log("current",STOP)
     bsRef.current = new BetterScroll(ref.current, {
-      bounce:false,//是否启用回弹动画效果
+      // bounce:false,//是否启用回弹动画效果
       click:true,
-      bounceTime: TIME_BOUNCE,
+      // momentum:false,//当快速在屏幕上滑动一段距离的时候，会根据滑动的距离和时间计算出动量，并生成滚动动画。
+      // bounceTime: TIME_BOUNCE,//弹力动画持续的毫秒数
       pullDownRefresh: refreshFn
         ? {
             threshold: THRESHOLD,
@@ -75,7 +78,7 @@ const Bscroll = forwardRef((props, ref) => {
           }
         : false,
     });
-
+    
     bsRef.current.on('pullingUp', async () => {
       await pullingUpHandleRef.current();
     });
@@ -110,7 +113,7 @@ const Bscroll = forwardRef((props, ref) => {
           </div>
         </div>
 
-        <div style={{ minHeight: height + 1 }}>{props.children}</div>
+        <div style={{minHeight:height - 48}}>{props.children}</div>
         <div className={classNames('pullup-wrapper', { 'bs-hidden': !loadMoreFn })}>
           <div className={classNames({ 'bs-hidden': !isNoMore })}>
             <span className='pullup-txt'>已经到尽头了</span>
@@ -128,3 +131,4 @@ const Bscroll = forwardRef((props, ref) => {
 });
 
 export default Bscroll;
+

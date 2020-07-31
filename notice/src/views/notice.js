@@ -1,5 +1,5 @@
 import React,{useState,useEffect,useRef} from 'react';
-import {Icon,List,Tabs,Toast} from "antd-mobile";
+import {Icon,List,Tabs,Toast,Result} from "antd-mobile";
 import 'antd-mobile/dist/antd-mobile.css';
 import api from  '../utils/api';
 import Changetime from '../utils/time'
@@ -25,7 +25,7 @@ const NoticePage = (props) => {
     const ref=useRef();
     const clientHeight=document.documentElement.clientHeight;
     const [listData,setListData]=useState([]); //公告列表
-    const [page,setPage]=useState({pageNum:1,pageSize:5});
+    const [page,setPage]=useState({pageNum:1,pageSize:10});
     const [columnList,setcolumnList]=useState([]);  //栏目列表
     const [currentColumnid,setcurrentColumnid]=useState(undefined) //当前栏目id
     // const [Mvisible,setMvisible]=useState(false) //能否看见搜索模态框
@@ -33,7 +33,7 @@ const NoticePage = (props) => {
 
     const [total,setTotal]=useState(0);
     const [loadingMore,setLoadingMore]=useState(false);
-    const [refreshId,setRefreshId]=useState(1);
+    const [refreshId,setrefreshId]=useState(1);
     
     useEffect(()=>{
         //获取栏目列表
@@ -66,18 +66,23 @@ const NoticePage = (props) => {
     //点击栏目选择公告列表
     function selectColumndata(tab,index){
         console.log(tab,page)
+        setrefreshId(refreshId+1)
         setPage({...page,pageNum:1});
         getselectcolumnlist(tab.id)
         setcurrentColumnid(tab.id)//将选择栏目id存放
     }
      //点击跳转
     function gotoNoticedetail(item){
-        console.log(props)
-    //    props.history.push(`${props.match.path}${item.id}/${item.noticeColumnId}`);
-        props.history.push({
-            pathname:`${props.match.path}/${item.id}`,
-            query:{noticeColumnId:item.noticeColumnId}
-        })
+        
+        const openurl =  `${window.location.origin}${process.env.PUBLIC_URL}/content/${item.id}`
+        console.log(openurl)
+        const temurl=window.encodeURI(openurl);
+        window.yyzd.commandnative("yyzd://web=" + temurl);
+        
+        // props.history.push({
+        //     pathname:`${props.match.path}/${item.id}`,
+        //     query:{noticeColumnId:item.noticeColumnId}
+        // })
    }
    
    async function refreshFn(){
@@ -103,8 +108,9 @@ const NoticePage = (props) => {
                 setLoadingMore(false);
             }
         })
+        
     }
-    
+    // console.log(listData.length,total,listData.length===total)
     return (
     <div className="App">
         {/* <NavBar
@@ -125,9 +131,8 @@ const NoticePage = (props) => {
         <div style={{position:"relative",zIndex:"1"}}>
             <NoticeSearch searchfc={getNoticelist} currentid={currentColumnid}  resetlist={setListData}/>
         </div>
-   
-        {/* style={{overflow:"hidden",height:"100%"}} */}
         <div>
+        {/* style={{overflow:"hidden",height:"100%"}} */}
             <Bscroll ref={ref} height={clientHeight - 90} isNoMore={listData.length===total} loadingMore={loadingMore} betterScrollRefreshId={refreshId}
             refreshFn={refreshFn} loadMoreFn={loadMoreFn}>
                 <List>
@@ -143,11 +148,12 @@ const NoticePage = (props) => {
                             </div>
                         </List.Item>
                         );
-                    }):<div className="nodata">{loading?<Icon type="loading"/>:"没有数据"}</div>
+                    }):<div className="nodata">{loading?<Icon type="loading"/>:
+                    <Result img={<Icon type="cross-circle" className="spe" style={{ fill: '#efefef' }} />}  message="没有数据" />}</div>
                     }
                 </List>
             </Bscroll>
-        </div> 
+        </div>
         {/* <NoticeSearch visible={Mvisible} onClose={()=>setMvisible(false)} searchfc={getNoticelist}
             currentid={currentColumnid}  resetlist={setListData}
         /> */}

@@ -2,7 +2,7 @@ import React,{useState,useEffect} from 'react';
 import {Modal,Flex,Toast} from 'antd-mobile';
 import api from '../utils/api'
 import MyFunLogo from '../assets/images/MyFunLogo';
-import getLocal from '../utils/tool'
+
 
 const alert = Modal.alert;
 const prompt = Modal.prompt
@@ -22,18 +22,19 @@ const renamerequest=(data)=>{
 
 const ActionModal=(props)=>{
     
-    const [actiontypearr,setactiontypearr] = useState([])
+    const [actiontypearr,setactiontypearr] = useState([{"type":"重命名","img":"rename","action":"rename"},
+                                                    {"type":"删除","img":"deleteimg","action":"delete"}])
 
-    useEffect(() => {
-        if(props.actionData.type===1){
-            setactiontypearr([{"type":"重命名","img":"rename","action":"rename"},
-                        {"type":"删除","img":"deleteimg","action":"delete"},
-                        {"type":"下载","img":"downloadimg","action":"download"}])
-        }else{
-            setactiontypearr([{"type":"重命名","img":"rename","action":"rename"},
-                     {"type":"删除","img":"deleteimg","action":"delete"}])
-        }
-    },[props.actionData.type])
+    // useEffect(() => {
+    //     if(props.actionData.type===1){
+    //         setactiontypearr([{"type":"重命名","img":"rename","action":"rename"},
+    //                     {"type":"删除","img":"deleteimg","action":"delete"},
+    //                     {"type":"下载","img":"downloadimg","action":"download"}])
+    //     }else{
+    //         setactiontypearr([{"type":"重命名","img":"rename","action":"rename"},
+    //                  {"type":"删除","img":"deleteimg","action":"delete"}])
+    //     }
+    // },[props.actionData.type])
     
     function actions(type){
         props.onClose()
@@ -42,6 +43,7 @@ const ActionModal=(props)=>{
                 alert(`删除"${props.actionData.name}"`, '', [
                     { text: '取消', onPress: () => console.log('取消') },
                     { text: '删除', onPress: () => {
+                        Toast.loading('Loading...', 1)
                         deleterequest({extId:props.actionData.extid,id:props.actionData.id}).then(res => {
                             // console.log(res)
                             if(res.message==="success"){
@@ -68,16 +70,16 @@ const ActionModal=(props)=>{
                     } },
                   ], 'default', `${props.actionData.name}`)
                 break;
-            case "download":
-                console.log("windowm.yyzd",window.yyzd);
-                (async function gettoken(){
-                    const localToken = await getLocal('token');
-                    const token = localToken ? JSON.parse(localToken) : {};
-                    const url = window.CONFIG.API_BASE_URL + "/file/download?access_token="+token.access_token+"&ids="+props.actionData.id+"&extId="+props.actionData.extid
-                    console.log("url",url);
-                    window.yyzd.downloadnative(url);
-                })()
-                break;
+            // case "download":
+            //     console.log("windowm.yyzd",window.yyzd);
+            //     (async function gettoken(){
+            //         const localToken = await getLocal('token');
+            //         const token = localToken ? JSON.parse(localToken) : {};
+            //         const url = window.CONFIG.API_BASE_URL + "/file/download?access_token="+token.access_token+"&ids="+props.actionData.id+"&extId="+props.actionData.extid
+            //         console.log("url",url);
+            //         window.yyzd.downloadnative(url);
+            //     })()
+            //     break;
             default:
                 return false
         }

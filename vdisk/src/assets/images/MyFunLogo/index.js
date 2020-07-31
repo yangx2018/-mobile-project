@@ -9,6 +9,10 @@ import downloadimg from './download.png'
 import filedocx from './filedocx.png'
 import fileimg from './fileimg.png'
 import filepdf from './filepdf.png'
+import fileppt from './fileppt.png'
+import fileexcel from './fileexcel.png'
+import filezip from './filezip.png'
+import fileunknown from './fileunknown.png'
 
 export default{
     getIcon,getfileimg,
@@ -38,7 +42,7 @@ function getIcon(icon){
 function getfileimg(icon){
     switch(icon){
         case "null":
-            return filepack;
+            return fileunknown;
         case "docx":
             return filedocx;
         case "jpeg":
@@ -49,7 +53,15 @@ function getfileimg(icon){
             return fileimg;
         case "pdf":
             return filepdf;
+        case "ppt":
+            return fileppt;
+        case "xlsx":
+            return fileexcel;
+        case "zip":
+            return filezip;
+        case "rar":
+            return filezip;
         default :
-            return filepack;
+            return fileunknown;
     }
   }

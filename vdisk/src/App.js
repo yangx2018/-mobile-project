@@ -1,7 +1,7 @@
 import React from 'react';
 import './style.less';
 import 'antd-mobile/dist/antd-mobile.css';
-import { HashRouter,Route, Switch,BrowserRouter } from "react-router-dom";
+import { Route, Switch,BrowserRouter } from "react-router-dom";
 
 // import SearchFilepack from './views/vdisk_searchfile';
 import Vdisk_list from './views';
@@ -9,9 +9,9 @@ import Vdisk_list from './views';
 function App() {
   return (
     <>
-          <BrowserRouter>
+          <BrowserRouter  basename={`${process.env.PUBLIC_URL}`}>
             <Switch>
-               <Route path="/vidisk-h5/index.html" component={Vdisk_list}/>
+               <Route path="/" component={Vdisk_list}/>
             </Switch>
           </BrowserRouter>
     
