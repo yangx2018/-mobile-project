@@ -45,6 +45,7 @@ const NoticePage = (props) => {
                 getselectcolumnlist(res.data.list[0].id) //初始化第一个栏目的公告列表
                 setcurrentColumnid(res.data.list[0].id)  //存放当前选择的栏目的id
             }else{
+                setloading(false)
                 Toast.fail(res.message,1)
             }
         })

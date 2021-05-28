@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-06-19 17:04:59
+ * @LastEditTime: 2021-01-06 18:26:45
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \notice\public\index.html
+-->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -30,59 +38,13 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <script>
-      // window.CONFIG={API_BASE_URL:'http://192.10.169.212:31111/clock/api'}; //测试环境ip
+      // window.CONFIG={API_BASE_URL:'http://192.10.169.212:31111/clock/api',API_AUTH_URL:'http://192.10.169.212:31111'}; //测试环境ip
       // window.CONFIG={API_BASE_URL:'http://113.108.151.178:31111/clock/api'}; //演示环境ip
-      window.CONFIG={API_BASE_URL:'http://219.135.179.34:38111/clock/api'}; //测试环境ip
+      window.CONFIG={API_BASE_URL:'https://oms.cssccloud.net/clock/api',API_AUTH_URL:'https://oms.cssccloud.net'}; //正式环境ip
+    
     </script>
     <script>
-      /************ 配置与 app 交互所需代码 ****************/
-      /**
-       * app js 异步执行回调函数
-       * command
-       * uuid 回调的 ID
-       * strresult 返回值
-       */
-      window.jsnativeresult = function (command, uuid, strresult) {
-        console.log('jsnativeresult-' + strresult);
-        console.log(`jsnativeresult-${JSON.stringify({ command, uuid, strresult })}`);
-        // 获取对应的回调函数
-        const callback = (window.__CALLBACK__ || {})[uuid]; // {[uuid]:{resolve,reject}}
-        console.log('jsnativeresult-callback');
-        callback && callback.resolve(strresult);
-        // callback 执行后，如果是 __ 销毁
-        if (uuid.startsWith('__')) delete window.__CALLBACK__[uuid];
-        // console.log("jsnativeresult", uuid, window.__CALLBACK__);
-      };
-      const browser = (function() {
-      var u = navigator.userAgent;
-
-      return {
-        //移动终端浏览器版本信息
-        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
-        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或uc浏览器
-        iPhone: u.indexOf('iPhone') > -1, //是否为iPhone或者QQHD浏览器
-        iPad: u.indexOf('iPad') > -1, //是否iPad
-      };
-    })();
-
-
-    if (browser.iPhone) {
-      (function () {
-        if (window.webkit && window.webkit.messageHandlers) {
-          window.yyzd = {
-            commandnative: function(actionurl) {
-              window.webkit.messageHandlers.commandnative.postMessage(actionurl);
-            },
-            getnative: function(actionurl) {
-              window.webkit.messageHandlers.getnative.postMessage(actionurl);
-            },
-            downloadnative: function(actionurl) {
-              window.webkit.messageHandlers.downloadnative.postMessage(actionurl);
-            },
-          };
-        }
-      })();
-    }
+      
     </script>
     <!--
       This HTML file is a template.

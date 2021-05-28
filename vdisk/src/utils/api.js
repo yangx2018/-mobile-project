@@ -1,18 +1,20 @@
 import axios from 'axios';
 import {Toast} from 'antd-mobile';
-import getLocal from './tool'
+// import getLocal from './tool'
 const api=axios.create({
     baseURL:window.CONFIG.API_BASE_URL
 });
 api.interceptors.request.use(async function tt(config){
     console.log("api response intereptors config",config)
-    const localToken = await getLocal('token');
-    const token = localToken ? JSON.parse(localToken) : {};
-    if(token){
-        config.headers["Authorization"]="bearer" + token.access_token; 
+//     const localToken = await getLocal('token');
+//     const token = localToken ? JSON.parse(localToken) : {};
+//     if(token){
+//         config.headers["Authorization"]="bearer" + token.access_token; 
+//     }
+    // config.headers["Authorization"]="bearereyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsicmVzX2FwcHRlbSIsIm9yZGVyLXNlcnZpY2UiXSwidXNlcl9uYW1lIjoiZGRtYWRtaW5AZGRtYSIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdLCJleHAiOjE2MjIyMDk5MjMsImF1dGhvcml0aWVzIjpbXSwianRpIjoiZjFiZjJlMzEtNmNjMi00Mjc1LWJiZGYtOWZiY2U2ZTZkNjkxIiwiY2xpZW50X2lkIjoiJDJhJDEwJFhPVnM0WjFZdFBLcUt3UVZ5d0c5ai54TEFxWFlSUUxHWk1HTXJaRE5idGw2cFVDMFdldGVxIn0.TmwhePxfTHbMa8DcCExK_vdDitM2TdWLtA0SZlpfbliZgwkiv4n5pyr2yFGq4OX2z5hqKf6wZ1qhrp9O3kQm7iu0TaiNJZhV1UAtggYCi6N8DUIafVQ-lxBY7rMsDVYR-WrZJeBXhIiMFcXttv50OVeAYgywdCit-BhKpfaE29pNlMBWUIW3AsO7gXyLLtva4eCo8BSmOfMEZWGWKl6qt296RNdkahn-inmOBIaRMGGnG2GoUIMf96FjdaoC_sf1ui386k6M9QteBPBn7ukuig1k2wMZuKR2hF0zbQzVvh_r2tSPSWagwWNmNCcOQjxq160FN07fR25At1EnvRfR0g"
+    if(localStorage.getItem("token_")){
+        config.headers["Authorization"]="bearer" + localStorage.getItem("token_"); 
     }
-    console.log("lalalala",localToken)
-    // config.headers["Authorization"]="bearereyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsicmVzX2FwcHRlbSIsIm9yZGVyLXNlcnZpY2UiXSwidXNlcl9uYW1lIjoiWjYxNzlAY3NzY2hwcyIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdLCJleHAiOjE1OTYwMDQ4MDAsImF1dGhvcml0aWVzIjpbXSwianRpIjoiOTY5MDdjYzEtZTgxOC00Y2RmLThjZTQtNTQ3NjBiYmQxYzlhIiwiY2xpZW50X2lkIjoiJDJhJDEwJFhPVnM0WjFZdFBLcUt3UVZ5d0c5ai54TEFxWFlSUUxHWk1HTXJaRE5idGw2cFVDMFdldGVxIn0.LyKfUWrvf1v1KYTAQvIokH6jBM22mTtF_Mf5hJz4o_s5ZJo9xDQKZLUATCnOhNeiRg2lDyZtSMNszhJGGc5Ndy4n0-9ChHMaYHEp_h6-OUbwzERtLrxuYoLfd89I9-h1VftRGeuutjLzee0dxgMg0Mv2MIWtlrTHFwYlWaNjp2EFERK3E_Wxx-HQcilwCFTe6wLnqXkpRZxzSFy7TbMJw4WcKoqtUYaBkwOBWg4CxL8q9jEBlnIiTjdigOvobAhf9W1eHoDBeOLaTASeRR1xlxB9rKhLE1RmNXdQdOOSD-6mviv9rVeuOG8xBpgcYbYvZdEhKzzKMjnrkZpBgUyqbA"
     const myconfig={...config,params:{...config.params}};
     return myconfig;
 },error=>{
